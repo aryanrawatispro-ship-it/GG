@@ -199,57 +199,260 @@ export class BootScene extends Phaser.Scene {
     }
 
     createUIAssets() {
-        // Create Stardew Valley style UI panel
-        const panel = this.add.graphics();
+        // EXACT STARDEW VALLEY UI RECREATION
 
-        // Brown wooden border
-        panel.fillStyle(0x4e342e);
-        panel.fillRect(0, 0, 200, 100);
+        // Toolbar slot (single slot for 12-slot toolbar)
+        this.createToolbarSlot();
 
-        // Inner lighter area
-        panel.fillStyle(0x6d4c41);
-        panel.fillRect(4, 4, 192, 92);
+        // Inventory slot (for inventory menu)
+        this.createInventorySlot();
 
-        // Decorative corner details
-        panel.fillStyle(0x8b6f47);
-        panel.fillRect(6, 6, 8, 2);
-        panel.fillRect(186, 6, 8, 2);
-        panel.fillRect(6, 92, 8, 2);
-        panel.fillRect(186, 92, 8, 2);
+        // Health bar
+        this.createHealthBar();
 
-        panel.generateTexture('ui_panel', 200, 100);
-        panel.destroy();
+        // Energy bar
+        this.createEnergyBar();
 
-        // Create button
-        const button = this.add.graphics();
-        button.fillStyle(0x5d4037);
-        button.fillRect(0, 0, 100, 32);
-        button.fillStyle(0x6d4c41);
-        button.fillRect(2, 2, 96, 28);
-        button.fillStyle(0x8b6f47);
-        button.fillRect(4, 4, 92, 24);
-        button.generateTexture('ui_button', 100, 32);
-        button.destroy();
+        // Icons
+        this.createIcons();
 
-        // Energy bar (like Stardew's health bar)
-        const energyBar = this.add.graphics();
-        energyBar.fillStyle(0x2e7d32);
-        energyBar.fillRect(0, 0, 100, 10);
-        energyBar.generateTexture('ui_energy_bar', 100, 10);
-        energyBar.destroy();
+        // Dialogue box
+        this.createDialogueBox();
 
-        // VRAM bar (for GPU stats)
-        const vramBar = this.add.graphics();
-        vramBar.fillStyle(0x1976d2);
-        vramBar.fillRect(0, 0, 100, 10);
-        vramBar.generateTexture('ui_vram_bar', 100, 10);
-        vramBar.destroy();
+        // Menu background
+        this.createMenuBackground();
+    }
 
-        // Temperature bar (for overheating)
-        const tempBar = this.add.graphics();
-        tempBar.fillStyle(0xf44336);
-        tempBar.fillRect(0, 0, 100, 10);
-        tempBar.generateTexture('ui_temp_bar', 100, 10);
-        tempBar.destroy();
+    createToolbarSlot() {
+        // Exact Stardew toolbar slot (64x64 with brown border)
+        const slot = this.add.graphics();
+
+        // Outer dark border
+        slot.fillStyle(0x2a1a0f);
+        slot.fillRect(0, 0, 64, 64);
+
+        // Inner brown frame
+        slot.fillStyle(0x4a3425);
+        slot.fillRect(4, 4, 56, 56);
+
+        // Inner area (darker for empty slot)
+        slot.fillStyle(0x1a1410);
+        slot.fillRect(8, 8, 48, 48);
+
+        // Highlight on top-left
+        slot.fillStyle(0x6b5444);
+        slot.fillRect(4, 4, 56, 2);
+        slot.fillRect(4, 4, 2, 56);
+
+        // Shadow on bottom-right
+        slot.fillStyle(0x2a1a0f);
+        slot.fillRect(4, 58, 56, 2);
+        slot.fillRect(58, 4, 2, 56);
+
+        slot.generateTexture('toolbar_slot', 64, 64);
+        slot.destroy();
+
+        // Selected slot (with yellow border)
+        const selectedSlot = this.add.graphics();
+        selectedSlot.fillStyle(0x2a1a0f);
+        selectedSlot.fillRect(0, 0, 64, 64);
+        selectedSlot.fillStyle(0xffd700);
+        selectedSlot.fillRect(2, 2, 60, 60);
+        selectedSlot.fillStyle(0x4a3425);
+        selectedSlot.fillRect(4, 4, 56, 56);
+        selectedSlot.fillStyle(0x1a1410);
+        selectedSlot.fillRect(8, 8, 48, 48);
+        selectedSlot.generateTexture('toolbar_slot_selected', 64, 64);
+        selectedSlot.destroy();
+    }
+
+    createInventorySlot() {
+        // Same as toolbar but smaller (for inventory grid)
+        const slot = this.add.graphics();
+        slot.fillStyle(0x2a1a0f);
+        slot.fillRect(0, 0, 48, 48);
+        slot.fillStyle(0x4a3425);
+        slot.fillRect(3, 3, 42, 42);
+        slot.fillStyle(0x1a1410);
+        slot.fillRect(6, 6, 36, 36);
+        slot.fillStyle(0x6b5444);
+        slot.fillRect(3, 3, 42, 2);
+        slot.fillRect(3, 3, 2, 42);
+        slot.fillStyle(0x2a1a0f);
+        slot.fillRect(3, 43, 42, 2);
+        slot.fillRect(43, 3, 2, 42);
+        slot.generateTexture('inventory_slot', 48, 48);
+        slot.destroy();
+    }
+
+    createHealthBar() {
+        // Stardew health bar background
+        const healthBg = this.add.graphics();
+        healthBg.fillStyle(0x1a1410);
+        healthBg.fillRect(0, 0, 200, 32);
+        healthBg.fillStyle(0x2a1a0f);
+        healthBg.fillRect(2, 2, 196, 28);
+        healthBg.generateTexture('health_bg', 200, 32);
+        healthBg.destroy();
+
+        // Health fill (green)
+        const healthFill = this.add.graphics();
+        healthFill.fillStyle(0x68c23c);
+        healthFill.fillRect(0, 0, 4, 24);
+        healthFill.generateTexture('health_fill', 4, 24);
+        healthFill.destroy();
+
+        // Heart icon
+        const heart = this.add.graphics();
+        heart.fillStyle(0xff0000);
+        // Simple pixel heart
+        heart.fillRect(2, 3, 3, 3);
+        heart.fillRect(7, 3, 3, 3);
+        heart.fillRect(1, 6, 10, 4);
+        heart.fillRect(2, 10, 8, 2);
+        heart.fillRect(3, 12, 6, 2);
+        heart.fillRect(4, 14, 4, 1);
+        heart.generateTexture('heart_icon', 12, 16);
+        heart.destroy();
+    }
+
+    createEnergyBar() {
+        // Energy bar background (same as health)
+        const energyBg = this.add.graphics();
+        energyBg.fillStyle(0x1a1410);
+        energyBg.fillRect(0, 0, 200, 32);
+        energyBg.fillStyle(0x2a1a0f);
+        energyBg.fillRect(2, 2, 196, 28);
+        energyBg.generateTexture('energy_bg', 200, 32);
+        energyBg.destroy();
+
+        // Energy fill (orange/amber)
+        const energyFill = this.add.graphics();
+        energyFill.fillStyle(0xff8c00);
+        energyFill.fillRect(0, 0, 4, 24);
+        energyFill.generateTexture('energy_fill', 4, 24);
+        energyFill.destroy();
+
+        // Energy icon (lightning bolt)
+        const bolt = this.add.graphics();
+        bolt.fillStyle(0xffff00);
+        bolt.fillRect(6, 0, 2, 7);
+        bolt.fillRect(4, 4, 2, 3);
+        bolt.fillRect(8, 4, 2, 3);
+        bolt.fillRect(5, 7, 4, 4);
+        bolt.fillRect(3, 9, 2, 3);
+        bolt.fillRect(9, 9, 2, 3);
+        bolt.fillRect(6, 11, 2, 5);
+        bolt.generateTexture('energy_icon', 14, 16);
+        bolt.destroy();
+    }
+
+    createIcons() {
+        // Gold coin icon
+        const coin = this.add.graphics();
+        coin.fillStyle(0x8b6914);
+        coin.fillCircle(8, 8, 7);
+        coin.fillStyle(0xffd700);
+        coin.fillCircle(8, 8, 6);
+        coin.fillStyle(0xffed4e);
+        coin.fillCircle(6, 6, 3);
+        coin.fillStyle(0xffd700);
+        coin.fillRect(7, 7, 3, 3);
+        coin.generateTexture('coin_icon', 16, 16);
+        coin.destroy();
+
+        // Clock icon
+        const clock = this.add.graphics();
+        clock.fillStyle(0x4a3425);
+        clock.fillCircle(12, 12, 10);
+        clock.fillStyle(0xf4e4c1);
+        clock.fillCircle(12, 12, 8);
+        clock.fillStyle(0x2a1a0f);
+        clock.fillRect(11, 5, 2, 7);
+        clock.fillRect(11, 11, 5, 2);
+        clock.fillCircle(12, 12, 2);
+        clock.generateTexture('clock_icon', 24, 24);
+        clock.destroy();
+
+        // GPU item icon (for inventory)
+        const gpuItem = this.add.graphics();
+        gpuItem.fillStyle(0x2e7d32);
+        gpuItem.fillRect(4, 4, 24, 24);
+        gpuItem.fillStyle(0xffd700);
+        gpuItem.fillRect(6, 8, 20, 1);
+        gpuItem.fillRect(6, 12, 20, 1);
+        gpuItem.fillRect(6, 16, 20, 1);
+        gpuItem.fillStyle(0x00ff00);
+        gpuItem.fillRect(8, 10, 2, 2);
+        gpuItem.fillRect(18, 10, 2, 2);
+        gpuItem.generateTexture('item_gpu', 32, 32);
+        gpuItem.destroy();
+
+        // Credits item icon
+        const creditItem = this.add.graphics();
+        creditItem.fillStyle(0x8bc34a);
+        creditItem.fillRect(8, 6, 16, 20);
+        creditItem.fillStyle(0x2e7d32);
+        creditItem.fillRect(12, 10, 8, 2);
+        creditItem.fillRect(12, 14, 8, 2);
+        creditItem.fillRect(12, 18, 8, 2);
+        creditItem.generateTexture('item_credits', 32, 32);
+        creditItem.destroy();
+    }
+
+    createDialogueBox() {
+        // Stardew dialogue box (brown wooden panel)
+        const dialogue = this.add.graphics();
+
+        // Outer dark border
+        dialogue.fillStyle(0x2a1a0f);
+        dialogue.fillRect(0, 0, 800, 200);
+
+        // Brown frame
+        dialogue.fillStyle(0x4a3425);
+        dialogue.fillRect(8, 8, 784, 184);
+
+        // Inner beige area
+        dialogue.fillStyle(0xf4e4c1);
+        dialogue.fillRect(16, 16, 768, 168);
+
+        // Wood grain texture
+        dialogue.fillStyle(0xe4d4b1);
+        for (let i = 0; i < 20; i++) {
+            dialogue.fillRect(20 + i * 38, 20, 2, 160);
+        }
+
+        dialogue.generateTexture('dialogue_box', 800, 200);
+        dialogue.destroy();
+    }
+
+    createMenuBackground() {
+        // Full inventory menu background
+        const menu = this.add.graphics();
+
+        // Semi-transparent dark overlay
+        menu.fillStyle(0x000000, 0.7);
+        menu.fillRect(0, 0, 1280, 720);
+
+        menu.generateTexture('menu_overlay', 1280, 720);
+        menu.destroy();
+
+        // Inventory panel (large wooden panel)
+        const invPanel = this.add.graphics();
+        invPanel.fillStyle(0x2a1a0f);
+        invPanel.fillRect(0, 0, 600, 500);
+        invPanel.fillStyle(0x4a3425);
+        invPanel.fillRect(8, 8, 584, 484);
+        invPanel.fillStyle(0xf4e4c1);
+        invPanel.fillRect(16, 16, 568, 468);
+
+        // Wood grain
+        invPanel.fillStyle(0xe4d4b1);
+        for (let i = 0; i < 15; i++) {
+            invPanel.fillRect(20 + i * 38, 20, 2, 460);
+        }
+
+        invPanel.generateTexture('inventory_panel', 600, 500);
+        invPanel.destroy();
     }
 }
