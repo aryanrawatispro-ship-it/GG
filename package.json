@@ -1,0 +1,16 @@
+{
+  "name": "gensyn-gpu-farm",
+  "version": "1.0.0",
+  "description": "A cozy GPU farm management game inspired by Stardew Valley",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000"
+  },
+  "keywords": ["game", "phaser", "pixel-art", "gpu", "gensyn"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "phaser": "^3.60.0"
+  }
+}
